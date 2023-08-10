@@ -1,19 +1,17 @@
 import { Router } from 'express'
-// import ScheduleController from './controllers/ScheduleController'
-// import UserController from './controllers/UserController'
-// import { auth } from './middlewares/auth'
 
-// const { index, store, registerPeople, show, destroy } = ScheduleController
-// const { post, login, auth: authController, get } = UserController
+import { AdminController } from './controllers'
+import { auth } from './middlewares/auth'
+
 const routes = Router()
 
 // routes.post('/admin', auth, store)
-routes.get('/admin', (req, res) => {
-  res.send('Hellow world')
-})
+routes.post('/admin/login', AdminController.login)
+routes.get('/admin', AdminController.load)
+routes.get('/admin/load', auth, AdminController.load)
+// routes.post('/admin', AdminController.create)
 // routes.get('/admin/:id', show)
 // routes.put('/admin/:id', registerPeople)
-// routes.delete('/admin/:id', auth, destroy)
 
 
 // routes.post('/user', post)

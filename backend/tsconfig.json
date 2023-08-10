@@ -1,10 +1,16 @@
 {
   "compilerOptions": {
+    "target": "ES2021",
     "outDir": "./dist",
     "module": "commonjs",
-    "target": "ES2021",
     "esModuleInterop": true,
-    "allowJs": true,
-    "resolveJsonModule": true
+    "forceConsistentCasingInFileNames": true,
+    "strict": false,
+    "skipLibCheck": true,
+    "resolveJsonModule": true,
+    "typeRoots": [
+      "./src/app/@types",
+      "node_modules/@types"
+    ]
   }
 }

@@ -9,7 +9,7 @@
     "mongoose": "^7.4.2"
   },
   "scripts": {
-    "dev": "tsx ./src/server.ts",
+    "dev": "tsx --watch ./src/server.ts",
     "start": "node ./dist/server.js"
   },
   "devDependencies": {
