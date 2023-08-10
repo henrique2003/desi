@@ -1,12 +1,12 @@
 import { Request, Response } from 'express'
-import { sign } from 'jsonwebtoken'
-import { hash, compare } from 'bcrypt'
+import { compare } from 'bcrypt'
 import { config } from 'dotenv'
 config()
 
 import Admin from '../models/Admin'
 import { generateToken, validateEmptyField } from '../utils'
-import { badRequest, serverError } from '../helpers/response-status'
+import { badRequest, ok, serverError } from '../helpers/response-status'
+import { emptyField } from '../helpers/response-message'
 
 class AdminController {
   // public async create(req: Request, res: Response): Promise<Response> {
@@ -24,12 +24,13 @@ class AdminController {
   public async load(req: Request, res: Response): Promise<Response> {
     try {
       const admin = await Admin.findById(req.userId)
+      admin.password = undefined
 
       if (!admin) {
         return badRequest(res, 'Admin not found')
       }
 
-      return res.status(200).json(admin)
+      return ok(res, admin)
     } catch (error) {
       return serverError(res)
     }
@@ -40,7 +41,7 @@ class AdminController {
       const { username, password } = req.body
 
       if (!validateEmptyField(username) ?? !validateEmptyField(password)) {
-        return badRequest(res, 'Empty field')
+        return badRequest(res, emptyField())
       }
 
       const admin = await Admin.findOne({ username })
@@ -56,11 +57,11 @@ class AdminController {
 
       const token = generateToken(admin._id, true)
 
-      return res.status(200).json({ admin, token })
+      return ok(res, { admin, token })
     } catch (error) {
       return serverError(res)
     }
   }
 }
 
-export default new AdminController()
+export default AdminController

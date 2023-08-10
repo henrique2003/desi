@@ -1,22 +1,22 @@
 import { Router } from 'express'
 
-import { AdminController } from './controllers'
-import { auth } from './middlewares/auth'
+import { AdminController, DeveloperController } from './controllers'
+import { auth, isAdmin } from './middlewares'
+
+const adminController = new AdminController()
+const developerController = new DeveloperController()
 
 const routes = Router()
 
-// routes.post('/admin', auth, store)
-routes.post('/admin/login', AdminController.login)
-routes.get('/admin', AdminController.load)
-routes.get('/admin/load', auth, AdminController.load)
-// routes.post('/admin', AdminController.create)
-// routes.get('/admin/:id', show)
-// routes.put('/admin/:id', registerPeople)
+// admin
+routes.post('/admin/login', adminController.login)
+routes.get('/admin/load', auth, adminController.load)
 
-
-// routes.post('/user', post)
-// routes.get('/user', get)
-// routes.post('/login', login)
-// routes.get('/auth', auth, authController)
+// developer
+routes.get('/developer', auth, isAdmin, developerController.getAll)
+routes.get('/developer/:id', auth, isAdmin, developerController.findOne)
+routes.post('/developer', auth, isAdmin, developerController.create)
+routes.put('/developer/:id', auth, isAdmin, developerController.edit)
+routes.delete('/developer/:id', auth, isAdmin, developerController.delete)
 
 export default routes

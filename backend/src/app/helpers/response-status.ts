@@ -13,5 +13,5 @@ export function serverError(res: Response): Response {
 }
 
 export function unauthorized(res: Response): Response {
-  return res.status(401).json({ message: 'Não autorizado' })
+  return res.status(401).json({ message: 'Unauthorized' })
 }
