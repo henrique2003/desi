@@ -1,6 +1,4 @@
 import { Request, Response } from 'express'
-import { config } from 'dotenv'
-config()
 
 import { validateEmptyField } from '../utils'
 import { badRequest, ok, serverError } from '../helpers/response-status'

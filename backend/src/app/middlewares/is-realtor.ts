@@ -1,9 +1,9 @@
 import { Request, Response, NextFunction } from 'express'
 
 import { badRequest, unauthorized } from '../helpers/response-status'
-import Admin from '../models/Admin'
+import Realtor from '../models/Realtor'
 
-const isAdmin = async (req: Request, res: Response, next: NextFunction): Promise<Response> => {
+const isRealtor = async (req: Request, res: Response, next: NextFunction): Promise<Response> => {
   try {
     const id = req.userId
 
@@ -11,9 +11,9 @@ const isAdmin = async (req: Request, res: Response, next: NextFunction): Promise
       return badRequest(res, 'Required userId')
     }
 
-    const admin = await Admin.findById(id)
+    const realtor = await Realtor.findById(id)
 
-    if (!admin) {
+    if (!realtor) {
       return badRequest(res, 'Unauthorized')
     }
 
@@ -23,4 +23,4 @@ const isAdmin = async (req: Request, res: Response, next: NextFunction): Promise
   }
 }
 
-export default isAdmin
+export default isRealtor

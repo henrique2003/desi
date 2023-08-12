@@ -30,7 +30,7 @@ class AdminController {
         return badRequest(res, 'Admin not found')
       }
 
-      return ok(res, admin)
+      return ok(res, { admin })
     } catch (error) {
       return serverError(res)
     }
