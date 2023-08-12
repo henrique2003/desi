@@ -1,12 +1,13 @@
 import { Router } from 'express'
 
-import { AdminController, DeveloperController, ProprietieController, RealtorController } from './controllers'
+import { AdminController, DeveloperController, ProprietieController, RealtorController, ScheduleController } from './controllers'
 import { auth, isAdmin, isRealtor, uploadFile } from './middlewares'
 
 const adminController = new AdminController()
 const developerController = new DeveloperController()
 const proprietieController = new ProprietieController()
 const realtorController = new RealtorController()
+const scheduleController = new ScheduleController()
 
 const uploadFields = [
   { name: 'creci', maxCount: 1 },
@@ -38,9 +39,17 @@ routes.delete('/proprietie/:id', auth, isAdmin, proprietieController.delete)
 routes.get('/realtor', auth, isAdmin, realtorController.getAll)
 routes.delete('/realtor/:id', auth, isAdmin, realtorController.delete)
 
+routes.post('/realtor/login', realtorController.login)
 routes.post('/realtor', uploadFile.fields(uploadFields), realtorController.create)
 routes.post('/realtor/edit', auth, isRealtor, uploadFile.fields(uploadFields), realtorController.edit)
 routes.get('/realtor/load', auth, isRealtor, realtorController.load)
+
+// schedule
+routes.post('/schedule', auth, isRealtor, scheduleController.create)
+
+routes.get('/schedule', auth, isAdmin, scheduleController.getAll)
+routes.get('/schedule/:id', auth, isAdmin, scheduleController.findOne)
+routes.delete('/schedule/:id', auth, isAdmin, scheduleController.delete)
 
 
 export default routes
