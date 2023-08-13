@@ -15,9 +15,9 @@ export default function Register(): JSX.Element {
   const { getRootProps, getInputProps, isDragActive } = useDropzone({ onDrop })
 
   return (
-    <div className="w-full min-h-screen bg-slate-100 flex justify-start items-center flex-col px-3 pb-10">
-      <div className='max-w-[1200px] mx-auto mt-10 w-full flex gap-5'>
-        <div className='rounded-[5px] p-10 bg-blue-800 max-w-[400px] h-[240px]'>
+    <div className="w-full min-h-screen bg-slate-100 flex justify-start items-center px-3 pb-10">
+      <div className='max-w-[1200px] mx-auto mt-10 w-full flex gap-5 max-lg:flex-col'>
+        <div className='rounded-[5px] p-10 bg-blue-800 max-w-[400px] h-[240px] max-lg:max-w-full max-lg:h-auto'>
           <h3 className='text-4xl text-slate-200 mt-2 font-semibold'>Cadastre-se</h3>
           <p className='text-white text-md mt-5'>Comece a receber as melhores informações do mercado e venda com a melhor comissão!</p>
         </div>
