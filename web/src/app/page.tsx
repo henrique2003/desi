@@ -6,7 +6,7 @@ import { Input } from '@/components'
 
 export default function Login(): JSX.Element {
   return (
-    <div className="w-full h-screen bg-slate-100 flex justify-center items-center flex-col">
+    <div className="w-full h-screen bg-slate-100 flex justify-center items-center flex-col px-3">
       <div className="max-w-[650px] w-full rounded p-5 pb-[50px] flex flex-col justify-center items-center bg-white">
         <Image src={desiLogo} alt="logotipo d&si imoveis" className="w-[150px]" />
         <form className='max-w-[350px] w-full mx-auto flex flex-col justify-center'>
