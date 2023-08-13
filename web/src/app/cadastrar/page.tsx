@@ -5,6 +5,7 @@ import { useDropzone } from 'react-dropzone'
 import { twMerge } from 'tailwind-merge'
 import { toast } from 'react-toastify'
 import validator from 'validator'
+import InputMask from 'react-input-mask'
 
 import { Input, InputRadio } from '@/components'
 import validateCpf from '@/utils/validate-cpf'
@@ -100,18 +101,28 @@ export default function Register(): JSX.Element {
             />
             <Input
               label='Telefone'
-              name='celphone'
-              value={celphone}
-              onChange={e => setCelphone(e.target.value)}
               className='mt-4'
-            />
+            >
+              <InputMask
+                mask="(99) 99999-9999"
+                value={celphone}
+                name='celphone'
+                onChange={(e) => setCelphone(e.target.value)}
+                className='w-full h-[30px] focus:outline-none text-gray-600 placeholder:text-gray-500'
+              />
+            </Input>
             <Input
               label='Cpf'
-              name='cpf'
-              value={cpf}
-              onChange={e => setCpf(e.target.value)}
               className='mt-4'
-            />
+            >
+              <InputMask
+                mask="999.999.999-99"
+                value={cpf}
+                name='cpf'
+                onChange={(e) => setCpf(e.target.value)}
+                className='w-full h-[30px] focus:outline-none text-gray-600 placeholder:text-gray-500'
+              />
+            </Input>
           </div>
           <div className='w-full bg-white rounded-[5px] p-10 pb-15 mt-5'>
             <p className='mt-2 text-md text-red-600'>2/4</p>

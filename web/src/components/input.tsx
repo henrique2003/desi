@@ -5,9 +5,10 @@ import { twMerge } from 'tailwind-merge'
 
 type IProps = ComponentProps<'input'> & {
   label: string
+  children?: JSX.Element
 }
 
-const Input: React.FC<IProps> = ({ className, label, ...props }) => {
+const Input: React.FC<IProps> = ({ className, label, children, ...props }) => {
   const [focus, setFocus] = useState(false)
 
   return (
@@ -17,13 +18,13 @@ const Input: React.FC<IProps> = ({ className, label, ...props }) => {
       className
     )}>
       <legend className='text-gray-600 text-sm'>{label}</legend>
-      <input
+      {children ?? <input
         {...props}
         type="text"
         className='w-full h-[30px] focus:outline-none text-gray-600 placeholder:text-gray-500'
         onFocus={() => setFocus(true)}
         onBlur={() => setFocus(false)}
-      />
+      />}
     </fieldset>
   )
 }
