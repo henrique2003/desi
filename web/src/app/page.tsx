@@ -12,14 +12,14 @@ export default function Login(): JSX.Element {
         <form className='max-w-[350px] w-full mx-auto flex flex-col justify-center'>
           <div className="mt-4">
             <Input
-              label='Username'
-              name='name'
+              label='Nome de usuário'
+              name='username'
               className='mt-1'
             />
           </div>
           <div className="mt-5">
             <Input
-              label='Password'
+              label='Senha'
               name='password'
               className='mt-1'
             />
