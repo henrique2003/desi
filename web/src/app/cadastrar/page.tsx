@@ -1,12 +1,63 @@
 'use client'
 
-import React, { useCallback } from 'react'
+import React, { type FormEvent, useCallback, useState } from 'react'
 import { useDropzone } from 'react-dropzone'
+import { twMerge } from 'tailwind-merge'
+import { toast } from 'react-toastify'
+import validator from 'validator'
 
 import { Input, InputRadio } from '@/components'
-import { twMerge } from 'tailwind-merge'
+import validateCpf from '@/utils/validate-cpf'
 
 export default function Register(): JSX.Element {
+  const [name, setName] = useState('')
+  const [surname, setSurname] = useState('')
+  const [email, setEmail] = useState('')
+  const [celphone, setCelphone] = useState('')
+  const [cpf, setCpf] = useState('')
+
+  const onSubmit = async (e: FormEvent): Promise<void> => {
+    try {
+      e.preventDefault()
+
+      validateFields()
+    } catch (error) {
+
+    }
+  }
+
+  function validateFields(): any {
+    const toastConfig = {
+      hideProgressBar: false
+    }
+
+    if (!name) {
+      return toast.error(deafultErrorMessage('Nome'), toastConfig)
+    }
+
+    if (!surname) {
+      return toast.error(deafultErrorMessage('Sobrenome'), toastConfig)
+    }
+
+    if (!email || !validator.isEmail(email)) {
+      return toast.error(deafultErrorMessage('Email'), toastConfig)
+    }
+
+    const validCelphone = celphone.replace('(', '').replace(')', '').replace('-', '').replace('.', '')
+    if (!celphone || !validator.isMobilePhone(validCelphone, 'pt-BR')) {
+      return toast.error(deafultErrorMessage('Telefone'), toastConfig)
+    }
+
+    const validCpf = cpf.replace('.', '').replace('-', '').replace('.', '')
+    if (!cpf || !validateCpf(Number(validCpf))) {
+      return toast.error(deafultErrorMessage('Cpf'), toastConfig)
+    }
+  }
+
+  function deafultErrorMessage(field: string): string {
+    return `Campo "${field}" inválido`
+  }
+
   const onDrop = useCallback((acceptedFiles: File[]) => {
     // Do something with the dropped files
     console.log(acceptedFiles)
@@ -21,34 +72,44 @@ export default function Register(): JSX.Element {
           <h3 className='text-4xl text-slate-200 mt-2 font-semibold'>Cadastre-se</h3>
           <p className='text-white text-md mt-5'>Comece a receber as melhores informações do mercado e venda com a melhor comissão!</p>
         </div>
-        <form className='w-full'>
+        <form className='w-full' onSubmit={onSubmit}>
           <div className='w-full bg-white rounded-[5px] p-10 pb-15'>
             <p className='mt-2 text-md text-red-600'>1/4</p>
             <h3 className='text-xl font-semibold text-blue-800 mt-2'>Informações Pessoais</h3>
             <Input
               label='Nome'
               name='name'
+              value={name}
+              onChange={e => setName(e.target.value)}
               className='mt-6'
             />
             <Input
               label='Sobrenome'
               name='surname'
+              value={surname}
+              onChange={e => setSurname(e.target.value)}
               className='mt-4'
             />
             <Input
               type='email'
               label='Email'
               name='email'
+              value={email}
+              onChange={e => setEmail(e.target.value)}
               className='mt-4'
             />
             <Input
               label='Telefone'
               name='celphone'
+              value={celphone}
+              onChange={e => setCelphone(e.target.value)}
               className='mt-4'
             />
             <Input
               label='Cpf'
               name='cpf'
+              value={cpf}
+              onChange={e => setCpf(e.target.value)}
               className='mt-4'
             />
           </div>
@@ -133,7 +194,7 @@ export default function Register(): JSX.Element {
           </div>
           <button type='submit' className='w-[100px] h-[40px] bg-blue-900 ease duration-300 hover:bg-blue-800 text-white font-bold text-md rounded-[8px] mt-5'>Criar</button>
         </form>
-      </div>
-    </div>
+      </div >
+    </div >
   )
 }
