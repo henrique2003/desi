@@ -9,6 +9,7 @@ import InputMask from 'react-input-mask'
 
 import { Input, InputRadio } from '@/components'
 import validateCpf from '@/utils/validate-cpf'
+import Link from 'next/link'
 
 export default function Register(): JSX.Element {
   // 1/4
@@ -276,6 +277,16 @@ export default function Register(): JSX.Element {
               {crecci && (
                 <p className='text-md text-black bg-slate-500 rounded-xl mt-5 px-2 font-normal'>{crecci.name}</p>
               )}
+            </div>
+            <div className='flex gap-2 mt-10'>
+              <input
+                type="checkbox"
+                className="w-[17px] h-[17px] outline-none"
+              />
+              <p className='text-md text-gray-700 leading-4'>Li e aceito os {' '}
+                <Link href='/termos-de-uso' target='_blank' className='text-blue-700 cursor-pointer'>termos</Link>
+                {' '} e {' '}
+                <Link href='/condicoes' target='_blank' className='text-blue-700 cursor-pointer'>condições</Link></p>
             </div>
           </div>
           <button type='submit' className='w-[100px] h-[40px] bg-blue-900 ease duration-300 hover:bg-blue-800 text-white font-bold text-md rounded-[8px] mt-5'>Criar</button>
