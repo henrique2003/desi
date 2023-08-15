@@ -8,7 +8,7 @@ type IProps = ComponentProps<'input'> & {
   children?: JSX.Element
 }
 
-const Input: React.FC<IProps> = ({ className, label, children, ...props }) => {
+const Input: React.FC<IProps> = ({ className, label, children, type = 'text', ...props }) => {
   const [focus, setFocus] = useState(false)
 
   return (
@@ -20,7 +20,7 @@ const Input: React.FC<IProps> = ({ className, label, children, ...props }) => {
       <legend className='text-gray-600 text-sm'>{label}</legend>
       {children ?? <input
         {...props}
-        type="text"
+        type={type}
         className='w-full h-[30px] focus:outline-none text-gray-600 placeholder:text-gray-500'
         onFocus={() => setFocus(true)}
         onBlur={() => setFocus(false)}

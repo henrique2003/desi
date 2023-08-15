@@ -28,6 +28,7 @@ export default function Register(): JSX.Element {
   // 4/4
   const [rg, setRg] = useState<File | null>(null)
   const [crecci, setCrecci] = useState<File | null>(null)
+  const [acceptTerms, setAcceptTerms] = useState(false)
 
   const onSubmit = async (e: FormEvent): Promise<void> => {
     try {
@@ -67,7 +68,7 @@ export default function Register(): JSX.Element {
       return toast.error(deafultErrorMessage('Cpf'), toastConfig)
     }
 
-    // 2/4
+    // // 2/4
     if (!username) {
       return toast.error(deafultErrorMessage('Nome'), toastConfig)
     }
@@ -80,7 +81,7 @@ export default function Register(): JSX.Element {
       return toast.error(deafultErrorMessage('Confirmar senha'), toastConfig)
     }
 
-    // 3/4
+    // // 3/4
     if (!trainee) {
       return toast.error(deafultErrorMessage('Estagiário'), toastConfig)
     }
@@ -89,13 +90,17 @@ export default function Register(): JSX.Element {
       return toast.error(deafultErrorMessage('Crecci do supervisor'), toastConfig)
     }
 
-    // 4/4
+    // // 4/4
     if (!rg) {
       return toast.error(deafultErrorMessage('Rg'), toastConfig)
     }
 
     if (!crecci) {
       return toast.error(deafultErrorMessage('Crecci'), toastConfig)
+    }
+
+    if (!acceptTerms) {
+      return toast.error('Aceite os termos e condições', toastConfig)
     }
   }
 
@@ -199,6 +204,7 @@ export default function Register(): JSX.Element {
             />
             <Input
               label='Senha'
+              type='password'
               name='password'
               value={password}
               onChange={e => setPassword(e.target.value)}
@@ -206,6 +212,7 @@ export default function Register(): JSX.Element {
             />
             <Input
               label='Confirmar senha'
+              type='password'
               name='passwordConfimation'
               value={passwordConfimation}
               onChange={e => setPasswordConfimation(e.target.value)}
@@ -282,6 +289,7 @@ export default function Register(): JSX.Element {
               <input
                 type="checkbox"
                 className="w-[17px] h-[17px] outline-none"
+                onChange={() => setAcceptTerms(!acceptTerms)}
               />
               <p className='text-md text-gray-700 leading-4'>Li e aceito os {' '}
                 <Link href='/termos-de-uso' target='_blank' className='text-blue-700 cursor-pointer'>termos</Link>
