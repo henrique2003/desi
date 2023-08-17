@@ -3,13 +3,14 @@
 import React, { type FormEvent, useCallback, useState } from 'react'
 import { useDropzone } from 'react-dropzone'
 import { twMerge } from 'tailwind-merge'
-import { toast } from 'react-toastify'
 import validator from 'validator'
 import InputMask from 'react-input-mask'
 
 import { Input, InputRadio } from '@/components'
 import validateCpf from '@/utils/validate-cpf'
 import Link from 'next/link'
+import { toastError } from '@/utils/use-toast'
+import { deafultErrorMessage } from '@/helpers/error-messages'
 
 export default function Register(): JSX.Element {
   // 1/4
@@ -41,71 +42,63 @@ export default function Register(): JSX.Element {
   }
 
   function validateFields(): any {
-    const toastConfig = {
-      hideProgressBar: false
-    }
-
     // 1/4
     if (!name) {
-      return toast.error(deafultErrorMessage('Nome'), toastConfig)
+      return toastError(deafultErrorMessage('Nome'))
     }
 
     if (!surname) {
-      return toast.error(deafultErrorMessage('Sobrenome'), toastConfig)
+      return toastError(deafultErrorMessage('Sobrenome'))
     }
 
     if (!email || !validator.isEmail(email)) {
-      return toast.error(deafultErrorMessage('Email'), toastConfig)
+      return toastError(deafultErrorMessage('Email'))
     }
 
     const validCelphone = celphone.replace('(', '').replace(')', '').replace('-', '').replace('.', '')
     if (!celphone || !validator.isMobilePhone(validCelphone, 'pt-BR')) {
-      return toast.error(deafultErrorMessage('Telefone'), toastConfig)
+      return toastError(deafultErrorMessage('Telefone'))
     }
 
     const validCpf = cpf.replace('.', '').replace('-', '').replace('.', '')
     if (!cpf || !validateCpf(Number(validCpf))) {
-      return toast.error(deafultErrorMessage('Cpf'), toastConfig)
+      return toastError(deafultErrorMessage('Cpf'))
     }
 
-    // // 2/4
+    // 2/4
     if (!username) {
-      return toast.error(deafultErrorMessage('Nome'), toastConfig)
+      return toastError(deafultErrorMessage('Nome'))
     }
 
     if (!password) {
-      return toast.error(deafultErrorMessage('Senha'), toastConfig)
+      return toastError(deafultErrorMessage('Senha'))
     }
 
     if (password !== passwordConfimation) {
-      return toast.error(deafultErrorMessage('Confirmar senha'), toastConfig)
+      return toastError(deafultErrorMessage('Confirmar senha'))
     }
 
-    // // 3/4
+    // 3/4
     if (!trainee) {
-      return toast.error(deafultErrorMessage('Estagiário'), toastConfig)
+      return toastError(deafultErrorMessage('Estagiário'))
     }
 
     if (!supervisorCrecci) {
-      return toast.error(deafultErrorMessage('Crecci do supervisor'), toastConfig)
+      return toastError(deafultErrorMessage('Crecci do supervisor'))
     }
 
-    // // 4/4
+    // 4/4
     if (!rg) {
-      return toast.error(deafultErrorMessage('Rg'), toastConfig)
+      return toastError(deafultErrorMessage('Rg'))
     }
 
     if (!crecci) {
-      return toast.error(deafultErrorMessage('Crecci'), toastConfig)
+      return toastError(deafultErrorMessage('Crecci'))
     }
 
     if (!acceptTerms) {
-      return toast.error('Aceite os termos e condições', toastConfig)
+      return toastError('Aceite os termos e condições')
     }
-  }
-
-  function deafultErrorMessage(field: string): string {
-    return `Campo "${field}" inválido`
   }
 
   const onRgDrop = useCallback((acceptedFiles: File[]) => {

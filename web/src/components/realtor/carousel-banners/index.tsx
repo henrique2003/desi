@@ -1,10 +1,8 @@
 'use client'
 
-import 'react-responsive-carousel/lib/styles/carousel.min.css'
-import { Carousel } from 'react-responsive-carousel'
-
 import { banner01, banner02, banner03 } from '@/assets/images'
 import CarouselItem from './carousel-item'
+import { Carousel } from '@/components'
 
 const images = [
   banner01,
@@ -14,13 +12,7 @@ const images = [
 
 const CarouselBanners: React.FC = () => {
   return (
-    <Carousel
-      className='mt-10'
-      infiniteLoop
-      interval={3000}
-      autoPlay
-      showStatus={false}
-    >
+    <Carousel className='mt-10'>
       {images.map((item, i) => (
         <CarouselItem
           key={i}
