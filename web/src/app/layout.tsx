@@ -2,7 +2,7 @@ import { Notification } from '@/components'
 import type { Metadata } from 'next'
 import { Inter } from 'next/font/google'
 import './globals.css'
-import { AuthProvider } from '@/context/auth'
+import { AuthRealtorProvider } from '@/context/auth-realtor'
 
 const inter = Inter({ subsets: ['latin'] })
 
@@ -19,12 +19,12 @@ export default function RootLayout({
   return (
     <html lang="pt-br">
       <body className={inter.className}>
-        <AuthProvider>
+        <AuthRealtorProvider>
           <>
             <Notification />
             {children}
           </>
-        </AuthProvider>
+        </AuthRealtorProvider>
       </body>
     </html>
   )

@@ -1,4 +1,4 @@
-export interface IAuthContextData {
+export interface IAuthRealtorContextData {
   realtor: IRealtor | null
   isLogged: boolean
   isSignIn: boolean
@@ -30,7 +30,7 @@ interface IS3File {
   url: number
 }
 
-export interface IAuthResponse {
+export interface IAuthRealtorResponse {
   token: string
   realtor: IRealtor
 }
@@ -43,7 +43,7 @@ export interface IAuthorizationResponse {
   type?: string
 }
 
-export interface IApiAuthResponse {
+export interface IApiAuthRealtorResponse {
   realtor: IRealtor
   token: string
 }

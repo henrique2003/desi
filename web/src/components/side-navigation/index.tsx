@@ -1,9 +1,10 @@
 import Image from 'next/image'
 
-import SideNavigationItem from './SideNavigationItem'
+import SideNavigationItem from './side-navigation-item'
 import { desiLogo } from '@/assets/images'
 import { proprietie, profile } from '@/assets/icons'
 import Link from 'next/link'
+import SignOutButton from './sign-out-button'
 
 const SideNavigation: React.FC = () => {
   return (
@@ -26,7 +27,7 @@ const SideNavigation: React.FC = () => {
               image={profile}
               text="Perfil"
             />
-            <button type='button' className='bg-transparent text-sm text-gray-800'>Sair</button>
+            <SignOutButton />
           </div>
         </div>
       </div>

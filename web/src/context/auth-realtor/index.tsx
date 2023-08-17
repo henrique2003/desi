@@ -2,7 +2,7 @@
 
 import React, { createContext, useState, useEffect } from 'react'
 
-import { type IAuthContextData, type IRealtor } from './types'
+import { type IAuthRealtorContextData, type IRealtor } from './types'
 
 import api from '../../services/api'
 import { useRouter } from 'next/navigation'
@@ -12,9 +12,9 @@ interface Props {
   children: JSX.Element
 }
 
-export const AuthContext = createContext({} as IAuthContextData)
+export const AuthRealtorContext = createContext({} as IAuthRealtorContextData)
 
-export const AuthProvider: React.FC<Props> = ({ children }) => {
+export const AuthRealtorProvider: React.FC<Props> = ({ children }) => {
   const [realtor, setRealtor] = useState<IRealtor | null>(null)
   const [isSignIn, setIsSignIn] = useState<boolean>(false)
   const [isLogged, setIsLogged] = useState<boolean>(false)
@@ -31,7 +31,7 @@ export const AuthProvider: React.FC<Props> = ({ children }) => {
 
     console.log(realtor)
 
-    api.defaults.headers.common.authorization = `Bearer ${token as string}`
+    api.defaults.headers.common.authRealtororization = `Bearer ${token as string}`
 
     localStorage.setItem('token', JSON.stringify(token))
     localStorage.setItem('realtor', JSON.stringify(realtor))
@@ -61,15 +61,16 @@ export const AuthProvider: React.FC<Props> = ({ children }) => {
   }
 
   useEffect(() => {
-    async function loadRealtor(): Promise<void> {
+    function loadRealtor(): void {
+      setIsSignIn(true)
+
       const token = localStorage.getItem('token')
       const loaclRealtor = localStorage.getItem('realtor')
 
       if (loaclRealtor && token) {
-        api.defaults.headers.common.authorization = `Bearer ${token}`
+        api.defaults.headers.common.authRealtororization = `Bearer ${token}`
         setRealtor(JSON.parse(loaclRealtor))
         setIsLogged(true)
-        return
       }
 
       setIsSignIn(false)
@@ -79,7 +80,7 @@ export const AuthProvider: React.FC<Props> = ({ children }) => {
   }, [])
 
   return (
-    <AuthContext.Provider value={{
+    <AuthRealtorContext.Provider value={{
       signIn,
       signOut,
       accessDenied,
@@ -88,6 +89,6 @@ export const AuthProvider: React.FC<Props> = ({ children }) => {
       isSignIn
     }}>
       {children}
-    </AuthContext.Provider>
+    </AuthRealtorContext.Provider>
   )
 }

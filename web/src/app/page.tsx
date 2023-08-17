@@ -9,13 +9,13 @@ import { desiLogo } from '@/assets/images'
 import { Input } from '@/components'
 import { toastError } from '@/utils/use-toast'
 import { deafultErrorMessage } from '@/helpers/error-messages'
-import { useAuth } from '@/hooks/use-auth'
+import { useAuthRealtor } from '@/hooks/use-auth-realtor'
 
 export default function Login(): JSX.Element {
   const [username, setUsername] = useState('')
   const [password, setPassword] = useState('')
 
-  const { isLogged, signIn } = useAuth()
+  const { isLogged, signIn } = useAuthRealtor()
   const router = useRouter()
 
   useEffect(() => {
