@@ -85,7 +85,8 @@ class RealtorController {
         return badRequest(res, 'Invalid format for trainee')
       }
 
-      if (!validateCpf(cpf)) {
+      cpf = cpf.replace('.', '').replace('-', '').replace('.', '')
+      if (!validateCpf(Number(cpf))) {
         deleteAllFiles()
         return badRequest(res, 'Invalid cpf')
       }
@@ -93,6 +94,7 @@ class RealtorController {
       if (celphone
         .replace('(', '')
         .replace(')', '')
+        .replace(' ', '')
         .replace('-', '')
         .replace('.', '').length !== 11) {
         deleteAllFiles()
@@ -129,6 +131,8 @@ class RealtorController {
 
       return ok(res, { token: generateToken(realtor.id, true), realtor })
     } catch (error) {
+      console.log(error);
+
       return serverError(res)
     }
   }

@@ -14,6 +14,7 @@ import { useAuthRealtor } from '@/hooks/use-auth-realtor'
 export default function Login(): JSX.Element {
   const [username, setUsername] = useState('')
   const [password, setPassword] = useState('')
+  const [isSignIn, setIsSignIn] = useState(false)
 
   const { isLogged, signIn } = useAuthRealtor()
   const router = useRouter()
@@ -24,19 +25,22 @@ export default function Login(): JSX.Element {
     }
   }, [])
 
-  async function onSumit(e: FormEvent): Promise<void | null> {
+  async function onSubmit(e: FormEvent): Promise<void | null> {
     try {
       e.preventDefault()
+      setIsSignIn(true)
 
-      valdiateFields()
+      validateFields()
 
       await signIn(username, password)
+      setIsSignIn(false)
     } catch (error) {
       toastError('Email ou senha errado')
+      setIsSignIn(false)
     }
   }
 
-  function valdiateFields(): void {
+  function validateFields(): void {
     if (!username) {
       return toastError(deafultErrorMessage('Nome'))
     }
@@ -50,7 +54,7 @@ export default function Login(): JSX.Element {
     <div className="w-full h-screen bg-slate-100 flex justify-center items-center flex-col px-3">
       <div className="max-w-[650px] w-full rounded p-5 pb-[50px] flex flex-col justify-center items-center bg-white">
         <Image src={desiLogo} alt="logotipo d&si imoveis" className="w-[150px]" />
-        <form className='max-w-[350px] w-full mx-auto flex flex-col justify-center' onSubmit={onSumit}>
+        <form className='max-w-[350px] w-full mx-auto flex flex-col justify-center' onSubmit={onSubmit}>
           <div className="mt-4">
             <Input
               label='Nome de usuário'
@@ -70,7 +74,7 @@ export default function Login(): JSX.Element {
               onChange={e => setPassword(e.target.value)}
             />
           </div>
-          <button type='submit' className='w-full text-white ease duration-300 bg-blue-900 hover:bg-blue-800 rounded-[8px] h-[45px] mt-10 font-bold'>Entrar</button>
+          <button type='submit' className='w-full text-white ease duration-300 bg-blue-900 hover:bg-blue-800 rounded-[8px] h-[45px] mt-10 font-bold disabled:bg-blue-900' disabled={isSignIn}>Entrar</button>
         </form>
       </div>
       <p className="text-gray-700 text-sm mt-5">Não tem uma conta?

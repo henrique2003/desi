@@ -1,6 +1,6 @@
 'use client'
 
-import React, { type FormEvent, useCallback, useState } from 'react'
+import React, { type FormEvent, useCallback, useState, useEffect } from 'react'
 import { useDropzone } from 'react-dropzone'
 import { twMerge } from 'tailwind-merge'
 import validator from 'validator'
@@ -9,8 +9,11 @@ import InputMask from 'react-input-mask'
 import { Input, InputRadio } from '@/components'
 import validateCpf from '@/utils/validate-cpf'
 import Link from 'next/link'
-import { toastError } from '@/utils/use-toast'
+import { toastError, toastSuccess } from '@/utils/use-toast'
 import { deafultErrorMessage } from '@/helpers/error-messages'
+import { useAuthRealtor } from '@/hooks/use-auth-realtor'
+import { useRouter } from 'next/navigation'
+import api from '@/services/api'
 
 export default function Register(): JSX.Element {
   // 1/4
@@ -28,77 +31,141 @@ export default function Register(): JSX.Element {
   const [supervisorCrecci, setSupervisorCrecci] = useState('')
   // 4/4
   const [rg, setRg] = useState<File | null>(null)
-  const [crecci, setCrecci] = useState<File | null>(null)
+  const [creci, setCreci] = useState<File | null>(null)
   const [acceptTerms, setAcceptTerms] = useState(false)
 
-  const onSubmit = async (e: FormEvent): Promise<void> => {
+  const [isSignIn, setIsSignIn] = useState(false)
+
+  const { isLogged } = useAuthRealtor()
+  const router = useRouter()
+
+  useEffect(() => {
+    if (isLogged) {
+      router.push('/corretor')
+    }
+  }, [])
+
+  async function onSubmit(e: FormEvent): Promise<void | null> {
     try {
       e.preventDefault()
+      setIsSignIn(true)
 
-      validateFields()
+      if (!validateFields()) {
+        setIsSignIn(false)
+        return
+      }
+
+      const formData = new FormData()
+
+      const configRequest = {
+        headers: {
+          'Content-Type': 'multipart/form-data'
+        }
+      }
+
+      formData.append('username', username)
+      formData.append('password', password)
+      formData.append('name', name)
+      formData.append('surname', surname)
+      formData.append('cpf', cpf)
+      formData.append('celphone', celphone)
+      formData.append('trainee', `${trainee}`)
+      formData.append('email', email)
+      formData.append('supervisorCrecci', supervisorCrecci)
+      formData.append('creci', creci as File)
+      formData.append('rg', rg as File)
+
+      const { data: { realtor, token } } = await api.post('/realtor', formData, configRequest)
+
+      api.defaults.headers.common.authRealtororization = `Bearer ${token as string}`
+
+      localStorage.setItem('token', JSON.stringify(token))
+      localStorage.setItem('realtor', JSON.stringify(realtor))
+
+      router.push('/corretor')
+      toastSuccess('Logado com sucesso')
+      setIsSignIn(false)
     } catch (error) {
+      console.log(error)
 
+      toastError('Erro no cadastro')
+      setIsSignIn(false)
     }
   }
 
-  function validateFields(): any {
+  function validateFields(): boolean {
     // 1/4
     if (!name) {
-      return toastError(deafultErrorMessage('Nome'))
+      toastError(deafultErrorMessage('Nome'))
+      return false
     }
 
     if (!surname) {
-      return toastError(deafultErrorMessage('Sobrenome'))
+      toastError(deafultErrorMessage('Sobrenome'))
+      return false
     }
 
     if (!email || !validator.isEmail(email)) {
-      return toastError(deafultErrorMessage('Email'))
+      toastError(deafultErrorMessage('Email'))
+      return false
     }
 
     const validCelphone = celphone.replace('(', '').replace(')', '').replace('-', '').replace('.', '')
     if (!celphone || !validator.isMobilePhone(validCelphone, 'pt-BR')) {
-      return toastError(deafultErrorMessage('Telefone'))
+      toastError(deafultErrorMessage('Telefone'))
+      return false
     }
 
     const validCpf = cpf.replace('.', '').replace('-', '').replace('.', '')
     if (!cpf || !validateCpf(Number(validCpf))) {
-      return toastError(deafultErrorMessage('Cpf'))
+      toastError(deafultErrorMessage('Cpf'))
+      return false
     }
 
     // 2/4
     if (!username) {
-      return toastError(deafultErrorMessage('Nome'))
+      toastError(deafultErrorMessage('Nome'))
+      return false
     }
 
     if (!password) {
-      return toastError(deafultErrorMessage('Senha'))
+      toastError(deafultErrorMessage('Senha'))
+      return false
     }
 
     if (password !== passwordConfimation) {
-      return toastError(deafultErrorMessage('Confirmar senha'))
+      toastError(deafultErrorMessage('Confirmar senha'))
+      return false
     }
 
     // 3/4
     if (!trainee) {
-      return toastError(deafultErrorMessage('Estagiário'))
+      toastError(deafultErrorMessage('Estagiário'))
+      return false
     }
 
     if (!supervisorCrecci) {
-      return toastError(deafultErrorMessage('Crecci do supervisor'))
+      toastError(deafultErrorMessage('Creci do supervisor'))
+      return false
     }
 
     // 4/4
     if (!rg) {
-      return toastError(deafultErrorMessage('Rg'))
+      toastError(deafultErrorMessage('Rg'))
+      return false
     }
 
-    if (!crecci) {
-      return toastError(deafultErrorMessage('Crecci'))
+    if (!creci) {
+      toastError(deafultErrorMessage('Creci'))
+      return false
     }
 
     if (!acceptTerms) {
-      return toastError('Aceite os termos e condições')
+      toastError('Aceite os termos e condições')
+      return false
     }
+
+    return true
   }
 
   const onRgDrop = useCallback((acceptedFiles: File[]) => {
@@ -110,21 +177,21 @@ export default function Register(): JSX.Element {
     setRg(validFiles[0] || null)
   }, [])
 
-  const onCrecciDrop = useCallback((acceptedFiles: File[]) => {
+  const onCreciDrop = useCallback((acceptedFiles: File[]) => {
     // Filter acceptedFiles to only keep image and PDF files
     const validFiles = acceptedFiles.filter(
       (file) => file.type.startsWith('image/') || file.type === 'application/pdf'
     )
 
-    setCrecci(validFiles[0] || null)
+    setCreci(validFiles[0] || null)
   }, [])
 
   const rgDropzone = useDropzone({
     onDrop: onRgDrop
   })
 
-  const crecciDropzone = useDropzone({
-    onDrop: onCrecciDrop
+  const creciDropzone = useDropzone({
+    onDrop: onCreciDrop
   })
 
   return (
@@ -268,14 +335,14 @@ export default function Register(): JSX.Element {
               className={twMerge(
                 'w-full h-[45px] flex items-center justify-center border border-dashed border-blue-900 rounded-[10px] ease duration-300 cursor-pointer mt-5'
               )}
-              {...crecciDropzone.getRootProps()}
+              {...creciDropzone.getRootProps()}
             >
-              <input itemID='creci' id='creci' name='creci' {...crecciDropzone.getInputProps()} />
+              <input itemID='creci' id='creci' name='creci' {...creciDropzone.getInputProps()} />
               <p className='text-sm text-blue-900 font-medium'>Arraste arquivo aqui ou clique para fazer upload</p>
             </div>
             <div className='flex'>
-              {crecci && (
-                <p className='text-md text-black bg-slate-500 rounded-xl mt-5 px-2 font-normal'>{crecci.name}</p>
+              {creci && (
+                <p className='text-md text-black bg-slate-500 rounded-xl mt-5 px-2 font-normal'>{creci.name}</p>
               )}
             </div>
             <div className='flex gap-2 mt-10'>
@@ -290,7 +357,7 @@ export default function Register(): JSX.Element {
                 <Link href='/condicoes' target='_blank' className='text-blue-700 cursor-pointer'>condições</Link></p>
             </div>
           </div>
-          <button type='submit' className='w-[100px] h-[40px] bg-blue-900 ease duration-300 hover:bg-blue-800 text-white font-bold text-md rounded-[8px] mt-5'>Criar</button>
+          <button type='submit' className='w-[100px] h-[40px] bg-blue-900 ease duration-300 hover:bg-blue-800 text-white font-bold text-md rounded-[8px] mt-5 disabled:bg-blue-900' disabled={isSignIn}>Criar</button>
         </form>
       </div >
     </div >

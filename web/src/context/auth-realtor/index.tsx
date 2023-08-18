@@ -29,8 +29,6 @@ export const AuthRealtorProvider: React.FC<Props> = ({ children }) => {
       password
     })
 
-    console.log(realtor)
-
     api.defaults.headers.common.authRealtororization = `Bearer ${token as string}`
 
     localStorage.setItem('token', JSON.stringify(token))
